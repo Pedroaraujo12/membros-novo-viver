@@ -16,79 +16,81 @@
 
     <div class="max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200">
         <div class="bg-royal p-8 text-center">
-            <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            </div>
             <h1 class="text-2xl font-bold text-white uppercase tracking-wider">Acesso Restrito</h1>
-            <p class="text-blue-200 text-sm mt-1">Painel Ministerial Novo Viver</p>
+            <p class="text-blue-200 text-sm mt-1">Gestão Novo Viver</p>
         </div>
 
         <form id="loginForm" class="p-8 space-y-6">
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">E-mail Corporativo</label>
-                <input type="email" id="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">E-mail</label>
+                <input type="email" id="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none">
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Senha</label>
-                <input type="password" id="password" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="password" id="password" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none">
             </div>
             
-            <button type="submit" id="loginBtn" class="w-full bg-royal text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-900 transition-all transform hover:scale-[1.02]">
+            <button type="submit" id="loginBtn" class="w-full bg-royal text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-900 transition-all">
                 ENTRAR NO SISTEMA
             </button>
             
-            <div id="errorMessage" class="hidden mt-4 p-3 bg-red-100 text-red-700 text-xs rounded-lg text-center font-bold"></div>
-            
             <p class="text-center text-xs text-slate-400">
-                Acesso exclusivo para Pastores e Gestores autorizados.
+                Acesso exclusivo para Pastores e Gestores.
             </p>
         </form>
     </div>
 
     <script>
+        // Configurações diretas para evitar falhas de carregamento
         const SUPABASE_URL = "https://qakrpkwmhlpynrphucfl.supabase.co";
         const SUPABASE_KEY = "sb_publishable_GO7Aqg_eNO6hqUIl3rAzyg_GRuiIkWE";
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        let supabase;
+        try {
+            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log("Supabase inicializado.");
+        } catch (e) {
+            alert("Erro ao carregar o sistema de segurança. Verifique sua internet.");
+        }
 
         const form = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
-        const errorDiv = document.getElementById('errorMessage');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = 'Verificando...';
-            errorDiv.classList.add('hidden');
-
+            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password,
-                });
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = 'Conectando...';
 
-                if (error) {
-                    errorDiv.innerText = 'Erro: ' + error.message;
-                    errorDiv.classList.remove('hidden');
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = 'ENTRAR NO SISTEMA';
-                } else {
-                    console.log("Login bem sucedido, redirecionando...");
-                    window.location.assign('admin.html');
-                }
-            } catch (err) {
-                errorDiv.innerText = 'Erro inesperado no sistema.';
-                errorDiv.classList.remove('hidden');
+            console.log("Tentando login para:", email);
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                console.error("Erro no login:", error.message);
+                alert("Falha no login: " + error.message);
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = 'ENTRAR NO SISTEMA';
+            } else {
+                console.log("Login OK! Redirecionando...");
+                // Usar location.replace para evitar que o usuário volte para o login
+                window.location.replace('admin.html');
             }
         });
 
+        // Auto-login se já houver sessão ativa
         async function checkSession() {
             const { data: { session } } = await supabase.auth.getSession();
-            if (session) window.location.assign('admin.html');
+            if (session) {
+                console.log("Sessão ativa encontrada. Redirecionando...");
+                window.location.replace('admin.html');
+            }
         }
         checkSession();
     </script>
