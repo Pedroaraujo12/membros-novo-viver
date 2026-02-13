@@ -3,113 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Membros | Ministério Profético Novo Viver</title>
+    <title>Sistema de Gestão | Ministério Novo Viver</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .bg-church { background-color: #0f172a; }
-        .text-gold { color: #d4af37; }
-        .btn-gold { background-color: #d4af37; color: #0f172a; }
-        .btn-gold:hover { background-color: #b8962e; }
+        .bg-royal-dark { background-color: #1e3a8a; } /* Azul Escuro */
+        .bg-sky-light { background-color: #60a5fa; } /* Azul Claro */
+        .text-royal { color: #1e3a8a; }
+        .border-royal { border-color: #1e3a8a; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-slate-50 text-slate-900">
 
-    <!-- Header -->
-    <header class="bg-church text-white py-12 px-4 text-center shadow-lg">
-        <h1 class="text-3xl md:text-5xl font-bold text-gold mb-2">Ministério Profético Novo Viver</h1>
-        <p class="text-lg opacity-90">Sua jornada de fé e propósito começa aqui.</p>
-    </header>
-
-    <main class="max-w-4xl mx-auto py-10 px-4">
-        
-        <!-- Formulário Card -->
-        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10 border border-gray-100">
-            <h2 class="text-2xl font-semibold mb-6 border-b pb-2">Ficha de Cadastro de Membro</h2>
-            
-            <form id="cadastroForm" class="space-y-6">
-                <!-- Seção 1: Pessoal -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Nome Completo *</label>
-                        <input type="text" name="nome_completo" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold focus:ring-gold p-2 border">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Data de Nascimento</label>
-                        <input type="date" name="data_nascimento" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold focus:ring-gold p-2 border">
-                    </div>
+    <!-- Header / Navbar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-royal-dark rounded-lg flex items-center justify-center text-white font-bold">NV</div>
+                    <span class="text-xl font-bold text-royal tracking-tight uppercase">Novo Viver</span>
                 </div>
-
-                <!-- Seção 2: Contato -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Telefone Principal (WhatsApp) *</label>
-                        <input type="tel" name="telefone_principal" placeholder="(00) 00000-0000" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold focus:ring-gold p-2 border">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">E-mail</label>
-                        <input type="email" name="email" placeholder="exemplo@email.com" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold focus:ring-gold p-2 border">
-                    </div>
+                <div class="hidden md:flex space-x-8 font-medium text-slate-600">
+                    <a href="#" class="hover:text-blue-600 transition">Início</a>
+                    <a href="#departamentos" class="hover:text-blue-600 transition">Departamentos</a>
+                    <a href="#cadastro" class="hover:text-blue-600 transition">Cadastro</a>
+                    <a href="admin.html" class="text-blue-600 font-bold border-b-2 border-blue-600">Área do Pastor</a>
                 </div>
-
-                <!-- Seção 3: Endereço -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Endereço Completo</label>
-                    <input type="text" name="endereco_completo" placeholder="Rua, número, bairro, cidade" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold focus:ring-gold p-2 border">
-                </div>
-
-                <!-- Seção 4: Vida Cristã -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Data de Conversão</label>
-                        <input type="date" name="data_conversao" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold focus:ring-gold p-2 border">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Data de Batismo</label>
-                        <input type="date" name="data_batismo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold focus:ring-gold p-2 border">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Nome do Cônjuge (se aplicável)</label>
-                        <input type="text" name="nome_conjuge" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold focus:ring-gold p-2 border">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Ministério de Interesse</label>
-                        <select name="ministerio_interesse" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold focus:ring-gold p-2 border bg-white">
-                            <option value="">Selecione uma área...</option>
-                            <option value="Louvor">Louvor / Música</option>
-                            <option value="Infantil">Ministério Infantil</option>
-                            <option value="Jovens">Jovens / Adolescentes</option>
-                            <option value="Acolhimento">Acolhimento / Recepção</option>
-                            <option value="Midia">Mídia / Comunicação</option>
-                            <option value="Intercessão">Intercessão / Oração</option>
-                            <option value="Social">Ação Social</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="pt-4">
-                    <button type="submit" id="submitBtn" class="w-full btn-gold font-bold py-4 rounded-lg shadow-lg transition duration-300 transform hover:scale-[1.01] flex justify-center items-center">
-                        CONCLUIR MEU CADASTRO
-                    </button>
-                </div>
-            </form>
-
-            <div id="successMessage" class="hidden text-center py-10">
-                <div class="text-6xl mb-4">🙌</div>
-                <h2 class="text-3xl font-bold text-church mb-2">Bem-vindo à Família!</h2>
-                <p class="text-gray-600 mb-6">Seu cadastro foi realizado com sucesso. Em breve entraremos em contato.</p>
-                <button onclick="location.reload()" class="text-gold font-semibold underline">Realizar novo cadastro</button>
             </div>
         </div>
-    </main>
+    </nav>
 
-    <footer class="text-center py-10 text-gray-500 text-sm">
-        &copy; 2026 Ministério Profético Novo Viver. Todos os direitos reservados.
+    <!-- Hero Section -->
+    <section class="relative bg-royal-dark text-white py-24 px-4 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <svg class="h-full w-full" preserveAspectRatio="none" viewBox="0 0 100 100"><path fill="currentColor" d="M0 0 L100 0 L100 100 Z"/></svg>
+        </div>
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">Gestão Ministerial Inteligente</h1>
+            <p class="text-lg md:text-xl text-blue-100 mb-10 leading-relaxed font-light">
+                Bem-vindo ao sistema oficial de cadastro do Ministério Novo Viver. Unindo tecnologia e propósito para conectar membros, líderes e pastores de forma profissional e organizada.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#cadastro" class="bg-white text-royal px-8 py-4 rounded-full font-bold shadow-lg hover:bg-blue-50 transition transform hover:scale-105">Quero me Cadastrar</a>
+                <a href="admin.html" class="bg-blue-500 text-white px-8 py-4 rounded-full font-bold shadow-lg hover:bg-blue-600 transition transform hover:scale-105">Consultar Membros</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Departamentos -->
+    <section id="departamentos" class="py-20 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-royal mb-4">Nossos Departamentos</h2>
+            <p class="text-slate-500">Estrutura organizada para servir com excelência</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Card 1 -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl transition group">
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Espiritualidade</h3>
+                <p class="text-slate-500 text-sm mb-6">Louvor, Intercessão e Discipulado. O coração da nossa comunhão com Deus.</p>
+                <a href="admin.html?dep=Louvor" class="text-blue-600 font-bold text-sm hover:underline">Ver Líderes &rarr;</a>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl transition group">
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Educação</h3>
+                <p class="text-slate-500 text-sm mb-6">Ministério Infantil, Jovens e Casais. Formando a base da família cristã.</p>
+                <a href="admin.html?dep=Infantil" class="text-blue-600 font-bold text-sm hover:underline">Ver Líderes &rarr;</a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl transition group">
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Expansão</h3>
+                <p class="text-slate-500 text-sm mb-6">Missões, Evangelismo e Ação Social. Levando a palavra além das portas.</p>
+                <a href="admin.html?dep=Social" class="text-blue-600 font-bold text-sm hover:underline">Ver Líderes &rarr;</a>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl transition group">
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Operacional</h3>
+                <p class="text-slate-500 text-sm mb-6">Mídia, Acolhimento e Gestão. O suporte que faz tudo acontecer.</p>
+                <a href="admin.html?dep=Midia" class="text-blue-600 font-bold text-sm hover:underline">Ver Líderes &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cadastro Section -->
+    <section id="cadastro" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col md:flex-row">
+                <!-- Lateral -->
+                <div class="bg-royal-dark md:w-1/3 p-10 text-white flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Novo Membro?</h3>
+                        <p class="text-blue-100 text-sm leading-relaxed">Cadastre-se para receber avisos, participar dos departamentos e conectar-se à nossa liderança.</p>
+                    </div>
+                    <div class="mt-8">
+                        <p class="text-xs text-blue-300 uppercase tracking-widest font-bold">Portal do Pastor</p>
+                        <a href="admin.html" class="inline-block mt-2 text-white hover:text-blue-300 transition underline underline-offset-4">Fazer Login &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="md:w-2/3 p-10">
+                    <form id="cadastroForm" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Seu Perfil</label>
+                                <div class="flex gap-4">
+                                    <label class="flex-1 border-2 border-blue-100 rounded-xl p-3 flex items-center gap-2 cursor-pointer hover:border-blue-500 transition">
+                                        <input type="radio" name="perfil" value="Membro" checked class="w-4 h-4 text-blue-600">
+                                        <span class="text-sm font-medium">Membro</span>
+                                    </label>
+                                    <label class="flex-1 border-2 border-blue-100 rounded-xl p-3 flex items-center gap-2 cursor-pointer hover:border-blue-500 transition">
+                                        <input type="radio" name="perfil" value="Pastor" class="w-4 h-4 text-blue-600">
+                                        <span class="text-sm font-medium">Pastor</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-bold text-slate-700 mb-1">Nome Completo</label>
+                                <input type="text" name="nome_completo" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1">WhatsApp</label>
+                                <input type="tel" name="telefone_principal" required placeholder="(00) 00000-0000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1">Data de Nascimento</label>
+                                <input type="date" name="data_nascimento" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-bold text-slate-700 mb-1">E-mail</label>
+                                <input type="email" name="email" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-bold text-slate-700 mb-1">Interesse em Servir no Ministério de:</label>
+                                <select name="ministerio_interesse" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                    <option value="">Apenas Cadastro (Geral)</option>
+                                    <option value="Louvor">Louvor / Música</option>
+                                    <option value="Infantil">Ministério Infantil</option>
+                                    <option value="Midia">Mídia / Comunicação</option>
+                                    <option value="Acolhimento">Acolhimento</option>
+                                    <option value="Social">Social / Missões</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="w-full bg-royal-dark text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-900 transition-all transform hover:scale-[1.02]">
+                            FINALIZAR MEU REGISTRO
+                        </button>
+                    </form>
+
+                    <div id="successMessage" class="hidden text-center py-10">
+                        <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">✓</div>
+                        <h2 class="text-3xl font-bold text-royal mb-2">Tudo Pronto!</h2>
+                        <p class="text-slate-500 mb-6">Sua ficha foi enviada com sucesso para a secretaria do ministério.</p>
+                        <button onclick="location.reload()" class="text-blue-600 font-bold border-b-2 border-blue-600">Voltar ao Início</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Fornecedores -->
+    <section class="py-16 bg-slate-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h3 class="text-2xl font-bold text-slate-800 mb-4">É um Fornecedor de Serviços?</h3>
+            <p class="text-slate-500 mb-8">Deseja prestar serviços de manutenção, tecnologia ou eventos para o Ministério Novo Viver?</p>
+            <a href="mailto:contato@novoviver.org?subject=Cadastro de Fornecedor" class="inline-block bg-slate-800 text-white px-10 py-3 rounded-full font-bold hover:bg-black transition">Cadastrar minha Empresa</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-12 px-4 text-center">
+        <div class="flex items-center justify-center gap-2 mb-6">
+            <div class="w-8 h-8 bg-royal-dark rounded flex items-center justify-center text-white text-xs font-bold">NV</div>
+            <span class="font-bold text-royal tracking-widest uppercase">Novo Viver</span>
+        </div>
+        <p class="text-slate-400 text-sm mb-2">&copy; 2026 Ministério Profético Novo Viver.</p>
+        <p class="text-slate-400 text-xs">Brasília/DF - Brasil</p>
     </footer>
 
     <script>
@@ -124,28 +211,25 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Enviando...';
+            submitBtn.innerHTML = 'Processando...';
 
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
 
-            // Limpar strings vazias para o Supabase não dar erro em datas
             for (let key in data) {
                 if (data[key] === "") data[key] = null;
             }
 
-            const { error } = await supabase
-                .from('membros_novo_viver')
-                .insert([data]);
+            const { error } = await supabase.from('membros_novo_viver').insert([data]);
 
             if (error) {
                 alert('Erro ao enviar cadastro: ' + error.message);
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = 'CONCLUIR MEU CADASTRO';
+                submitBtn.innerHTML = 'FINALIZAR MEU REGISTRO';
             } else {
                 form.classList.add('hidden');
                 successMessage.classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.scrollTo({ top: form.offsetTop - 100, behavior: 'smooth' });
             }
         });
     </script>
