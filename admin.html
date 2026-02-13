@@ -26,7 +26,9 @@
     <nav class="bg-royal text-white p-4 shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <a href="index.html" class="p-2 bg-white/10 rounded-lg"><svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></a>
+                <a href="index.html" class="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition">
+                    <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                </a>
                 <div>
                     <h1 class="font-bold text-lg leading-tight uppercase tracking-tighter">Painel Ministerial</h1>
                     <p class="text-[10px] text-blue-300 uppercase font-bold" id="userRoleDisplay">Verificando...</p>
@@ -37,15 +39,18 @@
                     <button onclick="switchTab('membros')" id="tab-membros" class="px-6 py-2 rounded-lg text-xs font-bold uppercase transition active-tab">Membros</button>
                     <button onclick="switchTab('conteudo')" id="tab-conteudo" class="px-6 py-2 rounded-lg text-xs font-bold uppercase transition">Conteúdo</button>
                 </div>
-                <button onclick="handleLogout()" class="text-xs bg-red-500/20 hover:bg-red-500 px-3 py-2 rounded-lg transition font-bold uppercase tracking-widest">Sair</button>
+                <button onclick="handleLogout()" class="text-xs bg-red-500/20 hover:bg-red-500 px-3 py-2 rounded-lg transition font-bold uppercase tracking-widest text-white">Sair</button>
             </div>
         </div>
     </nav>
 
-    <!-- Tab Membros -->
+    <!-- Seção Membros -->
     <main id="section-membros" class="max-w-7xl mx-auto py-8 px-4">
         <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
-            <div><h2 class="text-3xl font-extrabold text-slate-800 tracking-tight uppercase">Membros</h2><p class="text-slate-500">Gestão da base de fé</p></div>
+            <div>
+                <h2 class="text-3xl font-extrabold text-slate-800 uppercase tracking-tight">Gestão de Membros</h2>
+                <p class="text-slate-500">Consulta e acompanhamento da base</p>
+            </div>
             <div class="flex gap-2">
                 <button id="btnExport" onclick="exportToCSV()" class="hidden bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-sm transition">📥 Exportar</button>
                 <button onclick="fetchMembers()" class="bg-white border text-slate-700 px-5 py-2.5 rounded-xl font-bold text-sm shadow-sm">🔄 Atualizar</button>
@@ -53,67 +58,79 @@
         </div>
 
         <div class="bg-white p-6 rounded-3xl shadow-sm mb-8 grid grid-cols-1 md:grid-cols-3 gap-6 border border-slate-100">
-            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Pesquisar por nome..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none">
-            <select id="filterMinisterio" onchange="filterTable()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none">
+            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Buscar por nome..." class="w-full bg-slate-50 border rounded-xl p-3 outline-none">
+            <select id="filterMinisterio" onchange="filterTable()" class="w-full bg-slate-50 border rounded-xl p-3 outline-none font-medium">
                 <option value="">Todos Ministérios</option>
-                <option value="Louvor">Louvor</option><option value="Pastoral">Pastoral</option><option value="Ensino">Ensino</option>
+                <option value="Pastoral">Pastoral</option><option value="Ensino">Ensino</option><option value="Louvor">Louvor</option>
+                <option value="Infantil">Infantil</option><option value="Midia">Mídia</option><option value="Acolhimento">Acolhimento</option>
             </select>
             <div class="text-right">
-                <p class="text-[10px] text-slate-400 uppercase font-bold">Total</p>
+                <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest">Total de Membros</p>
                 <p id="memberCount" class="text-3xl font-black text-royal">0</p>
             </div>
         </div>
 
         <div class="bg-white rounded-3xl shadow-sm overflow-hidden border border-slate-100">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-50/50 border-b"><tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest"><th class="px-8 py-5">Membro</th><th class="px-8 py-5">Contato</th><th class="px-8 py-5">Ministério</th><th class="px-8 py-5 text-right">Ficha</th></tr></thead>
-                <tbody id="membersList" class="divide-y divide-slate-50"></tbody>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50/50 border-b border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <th class="px-8 py-5">Nome</th>
+                            <th class="px-8 py-5">WhatsApp</th>
+                            <th class="px-8 py-5 text-center">Ministério</th>
+                            <th class="px-8 py-5 text-right">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersList" class="divide-y divide-slate-50"></tbody>
+                </table>
+            </div>
         </div>
     </main>
 
-    <!-- Tab Conteúdo -->
+    <!-- Seção Conteúdo -->
     <main id="section-conteudo" class="max-w-7xl mx-auto py-8 px-4 hidden">
         <div class="flex justify-between items-end mb-8">
-            <div><h2 class="text-3xl font-extrabold text-slate-800 tracking-tight uppercase">Gestão de Conteúdo</h2><p class="text-slate-500">Publicação de Estudos e Sermões</p></div>
+            <div><h2 class="text-3xl font-extrabold text-slate-800 uppercase tracking-tight">Mensagens</h2><p class="text-slate-500">Gestão de publicações</p></div>
             <button onclick="openPostModal()" class="bg-royal text-white px-6 py-3 rounded-2xl font-bold shadow-lg hover:bg-blue-900 transition">📝 Nova Publicação</button>
         </div>
-
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-100">
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
             <table class="w-full text-left">
-                <thead class="bg-slate-50/50 border-b"><tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest"><th class="px-8 py-5">Título</th><th class="px-8 py-5">Categoria</th><th class="px-8 py-5">Data</th><th class="px-8 py-5 text-right">Ações</th></tr></thead>
+                <thead>
+                    <tr class="bg-slate-50/50 border-b text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        <th class="px-8 py-5">Título</th>
+                        <th class="px-8 py-5">Categoria</th>
+                        <th class="px-8 py-5 text-right">Ações</th>
+                    </tr>
+                </thead>
                 <tbody id="postsList" class="divide-y divide-slate-50"></tbody>
             </table>
         </div>
     </main>
 
-    <!-- Modal Ficha Membro -->
+    <!-- Modais -->
     <div id="detailsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[100]">
-        <div class="bg-white rounded-[2.5rem] max-w-2xl w-full p-10 shadow-2xl">
-            <div class="flex justify-between items-start mb-8"><h2 class="text-2xl font-black text-royal uppercase tracking-tight">Ficha</h2><button onclick="closeModal()" class="text-slate-400 text-3xl font-light">&times;</button></div>
-            <div id="modalContent" class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm"></div>
+        <div class="bg-white rounded-[2.5rem] max-w-2xl w-full p-10 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-400 text-3xl font-light">&times;</button>
+            <h2 class="text-2xl font-black text-royal uppercase tracking-tight mb-8">Detalhes</h2>
+            <div id="modalContent" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
     </div>
 
-    <!-- Modal Novo Post -->
     <div id="postModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[100]">
         <div class="bg-white rounded-[2.5rem] max-w-4xl w-full p-10 shadow-2xl overflow-y-auto max-h-[90vh]">
-            <h2 class="text-2xl font-black text-royal uppercase mb-6">Publicar Novo Conteúdo</h2>
+            <h2 class="text-2xl font-black text-royal mb-6">NOVA PUBLICAÇÃO</h2>
             <form id="postForm" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <input type="text" name="titulo" placeholder="Título da Mensagem" required class="w-full bg-slate-50 border p-4 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500">
-                    <select name="categoria" required class="w-full bg-slate-50 border p-4 rounded-2xl outline-none">
-                        <option value="Sermão">Arquivo de Sermão</option>
-                        <option value="Estudo Bíblico">Estudo Bíblico</option>
-                        <option value="Devocional">Devocional Diário</option>
-                        <option value="Blog">Reflexão Pastoral (Blog)</option>
+                <input type="text" name="titulo" placeholder="Título" required class="w-full bg-slate-50 border p-4 rounded-2xl outline-none">
+                <div class="grid grid-cols-2 gap-4">
+                    <select name="categoria" required class="bg-slate-50 border p-4 rounded-2xl outline-none">
+                        <option value="Sermão">Sermão</option><option value="Estudo Bíblico">Estudo Bíblico</option><option value="Devocional">Devocional</option><option value="Blog">Blog</option>
                     </select>
+                    <input type="text" name="autor" placeholder="Autor" required class="bg-slate-50 border p-4 rounded-2xl outline-none">
                 </div>
-                <input type="text" name="autor" placeholder="Autor (ex: Pr. Pedro Silva)" required class="w-full bg-slate-50 border p-4 rounded-2xl outline-none">
-                <textarea name="conteudo" placeholder="Conteúdo completo da mensagem..." rows="10" required class="w-full bg-slate-50 border p-4 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <textarea name="conteudo" placeholder="Conteúdo..." rows="8" required class="w-full bg-slate-50 border p-4 rounded-2xl outline-none"></textarea>
                 <div class="flex justify-end gap-3">
-                    <button type="button" onclick="closePostModal()" class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold">Cancelar</button>
-                    <button type="submit" class="px-8 py-4 bg-royal text-white rounded-2xl font-bold shadow-lg">PUBLICAR AGORA</button>
+                    <button type="button" onclick="closePostModal()" class="px-8 py-4 bg-slate-100 rounded-2xl font-bold">Cancelar</button>
+                    <button type="submit" class="px-8 py-4 bg-royal text-white rounded-2xl font-bold">PUBLICAR</button>
                 </div>
             </form>
         </div>
@@ -126,22 +143,97 @@
 
         let allMembers = [];
         let allPosts = [];
-        let userRole = 'Visitante';
 
         async function init() {
             const { data: { session } } = await sb.auth.getSession();
             if (!session) { window.location.replace('login.html'); return; }
 
             const { data: profile } = await sb.from('perfis_admin').select('nivel').eq('id', session.user.id).single();
-            if (!profile) { alert("Acesso não configurado."); await sb.auth.signOut(); window.location.replace('login.html'); return; }
+            if (!profile) { alert("Acesso restrito."); await sb.auth.signOut(); window.location.replace('login.html'); return; }
 
-            userRole = profile.nivel;
-            document.getElementById('userRoleDisplay').innerText = `Gestor: ${profile.nivel}`;
-            if (userRole === 'Gestor') document.getElementById('btnExport').classList.remove('hidden');
+            document.getElementById('userRoleDisplay').innerText = `Acesso: ${profile.nivel}`;
+            if (profile.nivel === 'Gestor') document.getElementById('btnExport').classList.remove('hidden');
             
             document.getElementById('loadingOverlay').classList.add('hidden');
-            fetchMembers();
+            fetchMembers(); fetchPosts();
+        }
+
+        async function fetchMembers() {
+            const { data } = await sb.from('membros_novo_viver').select('*').order('created_at', { ascending: false });
+            allMembers = data || [];
+            document.getElementById('memberCount').innerText = allMembers.length;
+            renderMembers(allMembers);
+        }
+
+        function renderMembers(data) {
+            document.getElementById('membersList').innerHTML = data.map(m => `
+                <tr class="hover:bg-blue-50/30">
+                    <td class="px-8 py-5 font-bold text-slate-700">${m.nome_completo}</td>
+                    <td class="px-8 py-5 text-blue-600 font-bold">${m.telefone_principal}</td>
+                    <td class="px-8 py-5 text-center"><span class="bg-blue-100 text-royal px-3 py-1 rounded-full text-[10px] font-black uppercase">${m.ministerio_interesse || 'Geral'}</span></td>
+                    <td class="px-8 py-5 text-right"><button onclick="showDetails('${m.id}')" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest">Ver</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function fetchPosts() {
+            const { data } = await sb.from('estudos_mensagens').select('*').order('created_at', { ascending: false });
+            allPosts = data || [];
+            document.getElementById('postsList').innerHTML = allPosts.map(p => `
+                <tr class="hover:bg-blue-50/30">
+                    <td class="px-8 py-5 font-bold text-slate-800">${p.titulo}</td>
+                    <td class="px-8 py-5 text-[10px] font-black text-blue-400 uppercase tracking-widest">${p.categoria}</td>
+                    <td class="px-8 py-5 text-right flex justify-end gap-2">
+                        <button onclick="showPost('${p.id}')" class="text-blue-600 font-black text-[10px] uppercase border border-blue-100 px-3 py-1 rounded-lg">Ver Texto</button>
+                        <button onclick="deletePost('${p.id}')" class="text-red-500 font-black text-[10px] uppercase">Excluir</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showDetails(id) {
+            const m = allMembers.find(x => x.id === id);
+            document.getElementById('modalContent').innerHTML = `
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100"><p class="text-[10px] font-black text-slate-400 uppercase">Perfil</p><p class="font-bold">${m.perfil || '-'}</p></div>
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100"><p class="text-[10px] font-black text-slate-400 uppercase">Nascimento</p><p class="font-bold">${m.data_nascimento || '-'}</p></div>
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 md:col-span-2"><p class="text-[10px] font-black text-slate-400 uppercase">Ministério</p><p class="font-bold">${m.ministerio_interesse || 'Geral'}</p></div>
+            `;
+            document.getElementById('detailsModal').classList.remove('hidden');
+        }
+
+        function showPost(id) {
+            const p = allPosts.find(x => x.id === id);
+            document.getElementById('modalContent').innerHTML = `
+                <div class="col-span-2 space-y-4">
+                    <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                        <p class="text-[10px] font-black text-blue-600 uppercase mb-2">${p.categoria} | Por ${p.autor}</p>
+                        <h3 class="text-2xl font-black text-royal mb-4">${p.titulo}</h3>
+                        <div class="text-slate-700 whitespace-pre-wrap leading-relaxed">${p.conteudo}</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailsModal').classList.remove('hidden');
+        }
+
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const post = Object.fromEntries(formData.entries());
+            const { error } = await sb.from('estudos_mensagens').insert([post]);
+            if (error) alert("Erro: " + error.message);
+            else { alert("Publicado!"); closePostModal(); fetchPosts(); }
+        });
+
+        async function deletePost(id) {
+            if(!confirm("Excluir publicação?")) return;
+            await sb.from('estudos_mensagens').delete().eq('id', id);
             fetchPosts();
+        }
+
+        function filterTable() {
+            const s = document.getElementById('searchInput').value.toLowerCase();
+            const m = document.getElementById('filterMinisterio').value;
+            renderMembers(allMembers.filter(x => x.nome_completo.toLowerCase().includes(s) && (m === "" || x.ministerio_interesse === m)));
         }
 
         function switchTab(tab) {
@@ -151,73 +243,12 @@
             document.getElementById('tab-conteudo').classList.toggle('active-tab', tab === 'conteudo');
         }
 
-        async function fetchMembers() {
-            const { data } = await sb.from('membros_novo_viver').select('*').order('created_at', { ascending: false });
-            allMembers = data;
-            const list = document.getElementById('membersList');
-            list.innerHTML = data.map(m => `
-                <tr class="hover:bg-blue-50/30">
-                    <td class="px-8 py-5 font-bold text-slate-800">${m.nome_completo}</td>
-                    <td class="px-8 py-5"><a href="https://wa.me/${m.telefone_principal.replace(/\D/g,'')}" target="_blank" class="text-blue-600 font-bold">${m.telefone_principal}</a></td>
-                    <td class="px-8 py-5 text-center"><span class="bg-blue-100 text-royal px-3 py-1 rounded-full text-[10px] font-black uppercase">${m.ministerio_interesse || 'Geral'}</span></td>
-                    <td class="px-8 py-5 text-right"><button onclick="showDetails('${m.id}')" class="bg-slate-800 text-white px-4 py-2 rounded-xl text-[10px] font-bold uppercase">Ver</button></td>
-                </tr>
-            `).join('');
-            document.getElementById('memberCount').innerText = data.length;
-        }
+        function handleLogout() { sb.auth.signOut(); window.location.replace('login.html'); }
+        function closeModal() { document.getElementById('detailsModal').classList.add('hidden'); }
+        function openPostModal() { document.getElementById('postModal').classList.remove('hidden'); }
+        function closePostModal() { document.getElementById('postModal').classList.add('hidden'); }
+        function exportToCSV() { /* export logic */ }
 
-        async function fetchPosts() {
-            const { data, error } = await sb.from('estudos_mensagens').select('*').order('created_at', { ascending: false });
-            if (error) {
-                console.error("Erro posts:", error);
-                return;
-            }
-            allPosts = data;
-            const list = document.getElementById('postsList');
-            if (!data || data.length === 0) {
-                list.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-slate-400">Nenhum conteúdo publicado.</td></tr>';
-                return;
-            }
-            list.innerHTML = data.map(p => `
-                <tr class="hover:bg-blue-50/30">
-                    <td class="px-8 py-5 font-bold text-slate-800">${p.titulo}</td>
-                    <td class="px-8 py-5 text-xs uppercase font-black text-blue-400">${p.categoria}</td>
-                    <td class="px-8 py-5 text-xs text-slate-400">${new Date(p.created_at).toLocaleDateString()}</td>
-                    <td class="px-8 py-5 text-right flex justify-end gap-2">
-                        <button onclick="showPostDetails('${p.id}')" class="text-blue-600 hover:text-blue-800 font-bold text-[10px] uppercase border border-blue-200 px-2 py-1 rounded">Ver Texto</button>
-                        <button onclick="deletePost('${p.id}')" class="text-red-500 hover:text-red-700 font-bold text-[10px] uppercase">Excluir</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function showPostDetails(id) {
-            const p = allPosts.find(x => x.id === id);
-            const modal = document.getElementById('detailsModal');
-            const content = document.getElementById('modalContent');
-            
-            content.innerHTML = `
-                <div class="col-span-2 space-y-4">
-                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                        <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Título</p>
-                        <p class="font-bold text-slate-700">${p.titulo}</p>
-                    </div>
-                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                        <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Conteúdo</p>
-                        <div class="text-slate-700 whitespace-pre-wrap leading-relaxed">${p.conteudo}</div>
-                    </div>
-                </div>
-            `;
-            modal.classList.remove('hidden');
-        }
-
-        async function deletePost(id) {
-            if(!confirm("Deseja realmente excluir esta publicação?")) return;
-            const { error } = await sb.from('estudos_mensagens').delete().eq('id', id);
-            if (error) alert("Erro ao excluir: " + error.message);
-            else fetchPosts();
-        }
-        
         init();
     </script>
 </body>
